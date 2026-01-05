@@ -20,13 +20,6 @@
   flex-direction: column;
 }
 
-.footer-logo {
-  display: flex;
-  align-items: center;
-  width: 5.5rem;
-  height: 2.75rem;
-}
-
 .footer-bottom {
   display: flex;
   flex-wrap: wrap;
