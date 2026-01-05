@@ -4,7 +4,7 @@ const Review = require("../models/review.js");
 const dotenv = require("dotenv");
 dotenv.config({ quiet: true });
 
-const authorId = new mongoose.Types.ObjectId("69032754a51de33c43c0e66f");
+const authorId = new mongoose.Types.ObjectId("693c559e81cf06947cfcf747");
 
 async function connectDB() {
   try {
@@ -129,7 +129,7 @@ async function connectDB() {
         reviews: [review3._id, review2._id],
       },
       {
-        title: "Dribbble",
+        title: "Pixelary",
         image: "/images/10.webp",
         views: 42,
         likes: 2122,

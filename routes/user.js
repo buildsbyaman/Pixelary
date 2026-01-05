@@ -9,7 +9,7 @@ const userController = require("../controllers/user.js");
 const validateUserSchema = (req, res, next) => {
   const { error } = userSchema.validate(req.body.user);
   if (error) {
-    req.flash('failure', error.message);
+    req.flash("failure", error.message);
     res.redirect("/user/signup");
   } else {
     next();
@@ -20,7 +20,7 @@ router.get("/forgot", isNotLoggedIn, userController.forgotShow);
 
 router.get("/verify-otp", isNotLoggedIn, userController.verifyOTPShow);
 
-router.get('/reset-password', isNotLoggedIn, userController.resetPasswordShow);
+router.get("/reset-password", isNotLoggedIn, userController.resetPasswordShow);
 
 router.get("/signup", isNotLoggedIn, userController.signupShow);
 
@@ -31,6 +31,8 @@ router.post("/signup", validateUserSchema, userController.signup);
 router.post("/forgot", userController.forgotPassword);
 
 router.post("/verify-otp", userController.verifyOTP);
+
+router.get("/resend-otp", isNotLoggedIn, userController.resendOTP);
 
 router.post("/reset-password", userController.resetPassword);
 

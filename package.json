@@ -1,5 +1,5 @@
 {
-  "name": "dribbble",
+  "name": "Pixelary",
   "version": "1.0.0",
   "description": "A Web App to share designs.",
   "main": "app.js",
@@ -9,7 +9,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "dribbble",
+    "Pixelary",
     "express",
     "ejs",
     "web-development"

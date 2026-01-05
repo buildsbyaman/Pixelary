@@ -5,8 +5,8 @@
     <div class="auth-card">
       <div class="auth-logo">
         <img
-          src="/images/Dribbble-logo.png"
-          alt="Dribbble"
+          src="/images/Pixelary-logo.png"
+          alt="Pixelary"
           class="logo-image"
         />
       </div>
@@ -33,7 +33,7 @@
             required
             disabled
           />
-          <input type="hidden" name="email" value="<%= email || '' %>">
+          <input type="hidden" name="email" value="<%= email || '' %>" />
         </div>
 
         <div class="form-group">
@@ -67,8 +67,12 @@
       <div class="auth-footer">
         <p class="auth-terms">
           Didn't receive the code?
-          <a href="/user/signup" class="auth-link auth-link-primary"
-            >Back to Signup</a
+          <a
+            href="/user/resend-otp"
+            class="auth-link auth-link-primary"
+            id="resendLink"
+            onclick="handleResendClick(event)"
+            >Resend code</a
           >
         </p>
         <p class="auth-signin">
@@ -81,3 +85,12 @@
     </div>
   </div>
 </main>
+
+<script>
+  function handleResendClick(event) {
+    const link = event.target;
+    link.style.color = "#999";
+    link.style.pointerEvents = "none";
+    link.textContent = "Sending...";
+  }
+</script>

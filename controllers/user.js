@@ -1,7 +1,10 @@
 const User = require("../models/user.js");
 const Shot = require("../models/shot.js");
 const crypto = require("crypto");
-const { sendOTPEmail } = require("../utilities/verficationEmail.js");
+const {
+  sendOTPEmail,
+  sendWelcomeEmail,
+} = require("../utilities/verficationEmail.js");
 
 const generateOTP = () => {
   return crypto.randomInt(100000, 999999).toString();
@@ -126,6 +129,50 @@ module.exports.resetPasswordShow = (req, res) => {
   });
 };
 
+module.exports.resendOTP = async (req, res) => {
+  try {
+    const email = req.session.signupEmail || req.session.resetEmail;
+
+    if (!email) {
+      req.flash("failure", "Session expired. Please start over.");
+      return res.redirect("/user/signup");
+    }
+
+    const trimmedEmail = email.trim().toLowerCase();
+
+    const user = await User.findOne({ email: trimmedEmail });
+
+    if (!user) {
+      req.flash("failure", "User not found. Please sign up again.");
+      return res.redirect("/user/signup");
+    }
+
+    if (user.verificationAttempts >= 5) {
+      req.flash(
+        "failure",
+        "Your account has been temporarily blocked due to multiple failed attempts. Please try again later or contact support."
+      );
+      return res.redirect("/shot");
+    }
+
+    const otp = generateOTP();
+    user.verificationToken = otp;
+    user.verificationTokenExpires = Date.now() + 10 * 60 * 1000;
+    const verificationAttemptsMade = user.verificationAttempts;
+    user.verificationAttempts = verificationAttemptsMade + 1;
+    await user.save();
+
+    await sendOTPEmail(trimmedEmail, otp);
+
+    req.flash("success", "A new OTP has been sent to your email address.");
+    res.redirect("/user/verify-otp");
+  } catch (error) {
+    console.log(error);
+    req.flash("failure", "Unable to resend OTP. Please try again.");
+    res.redirect("/user/verify-otp");
+  }
+};
+
 module.exports.verifyOTP = async (req, res) => {
   try {
     const { email, otp } = req.body;
@@ -165,6 +212,8 @@ module.exports.verifyOTP = async (req, res) => {
       user.verificationAttempts = 0;
       await user.save();
 
+      await sendWelcomeEmail(trimmedEmail);
+
       req.login(user, (error) => {
         if (error) {
           req.flash(
@@ -173,7 +222,7 @@ module.exports.verifyOTP = async (req, res) => {
           );
           return res.redirect("/user/login");
         }
-        req.flash("success", "Welcome to Dribbble!");
+        req.flash("success", "Welcome to Pixelary!");
         res.redirect("/shot");
       });
       return;

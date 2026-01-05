@@ -1,8 +1,8 @@
-# Dribbble
+# Pixelary
 
 A modern, full-stack web application inspired by Dribbble, built with Express.js, MongoDB, and EJS to share designs, creative work, discover inspiring designs, and to connect with a community of designers and artists.
 
-## 🌐 [Live Demo](https://buildsbyaman-dribbble.vercel.app)
+## 🌐 [Live Demo](https://buildsbyaman-Pixelary.vercel.app)
 
 ## ✨ Features
 
@@ -18,11 +18,10 @@ A modern, full-stack web application inspired by Dribbble, built with Express.js
 - **Responsive Design** - Mobile-first, fully responsive interface
 - **Security** - Input validation, session management, and CSRF protection
 
-
 ## 📁 Project Structure
 
 ```
-Dribbble/
+Pixelary/
 ├── 📁 controllers/      # Route controllers
 │   ├── review.js           # Review management
 │   ├── shot.js             # Shot CRUD operations

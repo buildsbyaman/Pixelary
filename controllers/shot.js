@@ -182,7 +182,7 @@ module.exports.edit = async (req, res) => {
       let image = oldShot.image;
       if (req.file && req.file.path) {
         const publicId = extractPublicId(oldShot.image);
-        await cloudinary.uploader.destroy(`Dribbble/${publicId}`);
+        await cloudinary.uploader.destroy(`Pixelary/${publicId}`);
         image = req.file.path;
       }
       const { title, description, tags } = req.body.shot;
@@ -225,7 +225,7 @@ module.exports.delete = async (req, res) => {
     }
     if (res.locals.currUser.id == oldShot.author._id) {
       const publicId = extractPublicId(oldShot.image);
-      await cloudinary.uploader.destroy(`Dribbble/${publicId}`);
+      await cloudinary.uploader.destroy(`Pixelary/${publicId}`);
       await Shot.findByIdAndDelete(id);
       req.flash("success", "Shot deleted successfully!");
       res.redirect("/shot");
