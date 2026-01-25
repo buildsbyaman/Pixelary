@@ -2,7 +2,7 @@
 
 <section class="hero-section">
   <div class="hero-content">
-    <h1 class="hero-title">Discover the world's top designers</h1>
+    <h1 class="hero-title">Discover the world's top </br> [ Developers ]</h1>
   </div>
 </section>
 
@@ -27,7 +27,7 @@
 </section>
 
 <section class="trending-section">
-  <p class="trending-label">Trending searches</p>
+  <p class="trending-label">Trending Tags : </p>
   <div class="trending-tags">
     <span class="trending-tag" type="button">UI/UX</span>
     <span class="trending-tag" type="button">Minimalist Design</span>
@@ -50,14 +50,7 @@
           <div class="gallery-header">
             <div class="shot-info">
               <h3 class="shot-title"><%= shot.title %></h3>
-              <% if(shot.author) { %>
-                <div class="shot-author">
-                  <span class="author-avatar"><%= shot.author.username.charAt(0).toUpperCase() %></span>
-                  <span class="author-name">
-                    <a class="author-name" href="/user/<%= shot.author.id %>"><%= shot.author.username %></a>
-                  </span>
-                </div>
-              <% } %>
+              
             </div>
             <div class="shot-actions">
               <div class="stat-badge views-badge">
@@ -119,18 +112,28 @@
 
   tags.forEach(tag => {
     tag.addEventListener('click', e => {
+      const clickedTag = e.target;
+      const isAlreadyActive = clickedTag.classList.contains('grey');
+      
       tags.forEach(tag => {
         tag.classList.remove('grey');
-      })
-      tag.classList.toggle('grey');
-      let keyword = e.target.innerText;
+      });
+      
+      if(isAlreadyActive) {
+        renderNewContent(jsShotData);
+        return;
+      }
+      
+      // Otherwise, apply the filter
+      clickedTag.classList.add('grey');
+      let keyword = clickedTag.innerText;
       let filtered = jsShotData.filter(shot => 
         Array.isArray(shot.tags) && shot.tags.includes(keyword)
       );
       if(filtered.length == 0){
         gallery.innerHTML = "No such posts exist."
       }else{
-      renderNewContent(filtered);
+        renderNewContent(filtered);
       }
     });
   });
