@@ -3,23 +3,19 @@ const { isLoggedIn } = require("../middleware");
 const { shotSchema } = require("../model.js");
 const router = express.Router();
 const multer = require("multer");
-const cloudinary = require("cloudinary").v2;
-const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const statRouter = require("./stat.js");
 const shotController = require("../controllers/shot.js");
 
-cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.API_KEY,
-  api_secret: process.env.API_SECRET,
-});
-
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: "Pixelary",
-    allowedFormats: ["jpg", "jpeg", "png", "webp"],
-    transformation: [{ width: 2000, height: 2000, crop: "limit" }],
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 10 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    const allowed = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+    if (allowed.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error("Only JPEG, PNG, and WebP images are allowed."), false);
+    }
   },
 });
 
@@ -43,8 +39,6 @@ const shotSchemaValidatorForUpdate = (req, res, next) => {
   }
 };
 
-const upload = multer({ storage: storage });
-
 router.get("/", shotController.indexShow);
 
 router.get("/new", isLoggedIn, shotController.newShow);
@@ -54,9 +48,9 @@ router.get("/:id", shotController.individualShow);
 router.post(
   "/",
   isLoggedIn,
-  upload.single("shot[image]"),
+  upload.array("shot[images]", 10),
   shotSchemaValidatorForNew,
-  shotController.new
+  shotController.new,
 );
 
 router.get("/:id/edit", isLoggedIn, shotController.editShow);
@@ -64,9 +58,9 @@ router.get("/:id/edit", isLoggedIn, shotController.editShow);
 router.put(
   "/:id",
   isLoggedIn,
-  upload.single("shot[image]"),
+  upload.array("shot[images]", 10),
   shotSchemaValidatorForUpdate,
-  shotController.edit
+  shotController.edit,
 );
 
 router.use("/:id/stat", statRouter);

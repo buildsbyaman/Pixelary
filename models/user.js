@@ -34,7 +34,7 @@ const userSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 userSchema.plugin(passportLocalMongoose);

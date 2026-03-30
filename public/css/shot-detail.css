@@ -1,22 +1,141 @@
 .shot-detail-container {
-  max-width: 1300px;
-  margin: 3rem auto 5rem auto;
-  padding: 0 2rem;
+  max-width: 1400px;
+  margin: 2rem auto 4rem auto;
+  padding: 0 1rem;
 }
 
 .shot-detail-card {
   background-color: var(--color-white);
-  border-radius: 16px;
+  border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.03);
+  border: 1px solid var(--color-gray-border);
 }
 
 .shot-image-container {
   position: relative;
   width: 100%;
-  height: 650px;
+  height: auto;
+  min-height: 250px;
+  max-height: 900px;
   overflow: hidden;
-  background: #f5f5f5;
+  background: var(--color-bg-sand);
+}
+
+/* Image Gallery Carousel */
+.shot-gallery {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 250px;
+  max-height: 900px;
+  overflow: hidden;
+}
+
+.gallery-track {
+  display: flex;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  height: 100%;
+}
+
+.gallery-slide {
+  min-width: 100%;
+  height: 100%;
+}
+
+.gallery-slide .showcase-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gallery-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-black);
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 10;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.shot-gallery:hover .gallery-nav {
+  opacity: 1;
+}
+
+.gallery-nav:hover {
+  background: var(--color-white);
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.gallery-prev {
+  left: 16px;
+}
+
+.gallery-next {
+  right: 16px;
+}
+
+.gallery-dots {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  padding: 8px 12px;
+  border-radius: 20px;
+}
+
+.gallery-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+}
+
+.gallery-dot.active {
+  background: var(--color-white);
+  width: 24px;
+  border-radius: 4px;
+}
+
+.gallery-dot:hover {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.gallery-counter {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  color: white;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  z-index: 10;
+  letter-spacing: 0.5px;
 }
 
 .shot-detail-image {
@@ -42,19 +161,20 @@
 }
 
 .shot-detail-title {
-  font-family: "Source Serif 4", Georgia, serif;
-  font-size: 2.5rem;
-  font-weight: 600;
+  font-family: "Manrope", sans-serif;
+  font-size: 2.25rem;
+  font-weight: 700;
   color: var(--color-black);
   margin: 0 0 0.5rem 0;
-  line-height: 1.2;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
 }
 
 .shot-meta-info {
   display: flex;
   align-items: center;
   gap: 1rem;
-  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Manrope", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 0.875rem;
   color: var(--color-text-gray);
   margin-bottom: 1rem;
@@ -101,7 +221,7 @@
   display: flex;
   gap: 1rem;
   align-items: center;
-  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Manrope", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 0.875rem;
   color: var(--color-text-gray);
 }
@@ -121,7 +241,7 @@
 }
 
 .shot-detail-description {
-  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Manrope", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 1rem;
   line-height: 1.7;
   color: var(--color-text-dark);
@@ -147,28 +267,29 @@
   all: unset;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1rem;
-  border-radius: 25px;
-  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 0.875rem;
+  gap: 0.625rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  font-family: "Manrope", sans-serif;
+  font-size: 0.9375rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  border: 2px solid var(--color-gray-border);
+  border: 1px solid var(--color-gray-border);
   color: var(--color-text-dark);
+  background-color: var(--color-white);
 }
 
 .interaction-btn:hover {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
-  transform: translateY(-1px);
+  border-color: var(--color-black);
+  background-color: var(--color-bg-sand);
+  transform: translateY(-2px);
 }
 
 .interaction-btn.liked {
-  background-color: var(--color-primary);
+  background-color: var(--color-black);
   color: var(--color-white);
-  border-color: var(--color-primary);
+  border-color: var(--color-black);
 }
 
 .interaction-btn.liked:hover {
@@ -213,7 +334,7 @@
 }
 
 .comments-title {
-  font-family: "Source Serif 4", Georgia, serif;
+  font-family: "Manrope", Georgia, serif;
   font-size: 1.75rem;
   font-weight: 600;
   color: var(--color-black);
@@ -221,10 +342,10 @@
 }
 
 .comments-count {
-  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Manrope", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 0.875rem;
   color: var(--color-text-gray);
-  background-color: var(--color-white);
+  background-color: var(--color-bg-sand);
   padding: 0.25rem 0.75rem;
   border-radius: 15px;
 }
@@ -238,7 +359,7 @@
 
 .comment-textarea {
   all: unset;
-  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Manrope", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 1rem;
   width: 100%;
   min-height: 100px;
@@ -269,7 +390,7 @@
 
 .comment-submit {
   all: unset;
-  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Manrope", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 0.875rem;
   font-weight: 600;
   padding: 0.75rem 1.5rem;
@@ -325,7 +446,7 @@
 }
 
 .comment-author-name {
-  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Manrope", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 0.875rem;
   font-weight: 600;
   color: var(--color-black);
@@ -333,7 +454,7 @@
 }
 
 .comment-date {
-  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Manrope", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 0.75rem;
   color: var(--color-text-gray);
   margin: 0;
@@ -346,7 +467,7 @@
 
 .comment-action-btn {
   all: unset;
-  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Manrope", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 0.75rem;
   color: var(--color-text-gray);
   cursor: pointer;
@@ -361,7 +482,7 @@
 }
 
 .comment-text {
-  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Manrope", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 0.875rem;
   line-height: 1.6;
   color: var(--color-text-dark);
@@ -381,7 +502,7 @@
 }
 
 .no-comments-text {
-  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Manrope", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 1rem;
   margin: 0;
 }
@@ -454,12 +575,12 @@
 
 @media (max-width: 768px) {
   .shot-detail-container {
-    margin: 1rem auto;
-    font-size: 1rem !important;
+    margin: 0.5rem auto 2rem auto;
+    padding: 0 0.75rem;
   }
 
   .shot-detail-content {
-    padding: 1.5rem;
+    padding: 1.25rem;
   }
 
   .shot-header {
@@ -480,7 +601,7 @@
   }
 
   .showcase-title {
-    font-size: 1.625rem;
+    font-size: 1.5rem;
   }
 
   .shot-title {
@@ -501,7 +622,7 @@
   }
 
   .stat-number {
-    font-size: 1.125rem;
+    font-size: 1rem;
   }
 
   .author-name-mini {
@@ -520,13 +641,13 @@
   .comment-textarea,
   .comment-text,
   .no-comments-text {
-    font-size: 0.75rem;
+    font-size: 0.8125rem;
   }
 
   .interaction-btn,
   .comment-submit,
   .action-btn {
-    font-size: 0.75rem;
+    font-size: 0.8125rem;
     padding: 0.625rem 0.875rem;
   }
 
@@ -556,7 +677,13 @@
   }
 
   .shot-image-container {
-    height: 250px;
+    min-height: 200px;
+    max-height: 400px;
+  }
+
+  .shot-gallery {
+    min-height: 200px;
+    max-height: 400px;
   }
 
   .comment-form {
@@ -565,6 +692,34 @@
 
   .comment-item {
     padding: 1rem;
+  }
+
+  .shot-info-section {
+    padding: 1.25rem 1rem 1.5rem 1rem;
+  }
+
+  .title-area {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .action-buttons {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .action-btn {
+    flex: 1;
+    justify-content: center;
+    min-width: 0;
+  }
+
+  .shot-navigation {
+    margin-bottom: 1.5rem;
+  }
+
+  .back-link {
+    font-size: 0.875rem;
   }
 }
 
@@ -687,7 +842,7 @@
 
 .shot-detail-wrapper {
   min-height: calc(100vh - 140px);
-  background: var(--color-white);
+  background-color: var(--color-bg-sand);
   padding: 3rem 0;
 }
 
@@ -699,7 +854,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  color: var(--color-text-gray);
+  color: var(--color-primary);
   font-weight: 500;
   transition: all 0.3s ease;
   text-decoration: none;
@@ -769,7 +924,7 @@
   font-weight: 600;
   color: var(--color-black);
   line-height: 1.3;
-  font-family: "Source Serif 4", Georgia, serif;
+  font-family: "Manrope", Georgia, serif;
 }
 
 .stat-badge-header {
@@ -800,7 +955,7 @@
   font-size: 0.875rem;
   font-weight: 600;
   color: var(--color-white);
-  font-family: "Source Serif 4", Georgia, serif;
+  font-family: "Manrope", Georgia, serif;
 }
 
 .author-name-mini {
@@ -808,7 +963,7 @@
   font-weight: 500;
   color: var(--color-text-gray);
   margin-bottom: 1rem;
-  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Manrope", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .author-name-mini a {
@@ -912,7 +1067,7 @@
 .stat-icon-hearts,
 .stat-icon-likes {
   font-size: 1rem;
-  color: #6b7280;
+  color: var(--color-text-gray);
   transition: all 0.2s ease;
 }
 
@@ -921,21 +1076,16 @@
   transform: scale(1.1);
 }
 
-.views-badge {
-  border-radius: 8px;
-  padding: 0.5rem 0.75rem;
-  background: rgba(107, 114, 128, 0.08);
-  transition: all 0.2s ease;
-}
-
-.views-badge:hover {
-  background: rgba(107, 114, 128, 0.12);
-  transform: scale(1.05);
+.views-display {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-text-gray);
 }
 
 .stat-icon-views {
   font-size: 1rem;
-  color: #6b7280;
+  color: var(--color-text-gray);
 }
 
 .thumbs-badge {
@@ -961,7 +1111,7 @@
 
 .stat-icon-thumbs {
   font-size: 1rem;
-  color: #6b7280;
+  color: var(--color-text-gray);
   transition: all 0.2s ease;
 }
 
@@ -972,8 +1122,8 @@
 .stat-number {
   font-size: 0.875rem;
   font-weight: 600;
-  color: #6b7280;
-  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: var(--color-text-gray);
+  font-family: "Manrope", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .stat-text {
@@ -1067,7 +1217,7 @@
 }
 
 .shot-title {
-  font-family: "Source Serif 4", Georgia, serif;
+  font-family: "Manrope", Georgia, serif;
   font-size: 2.5rem;
   font-weight: 600;
   color: var(--color-black);
@@ -1255,7 +1405,7 @@
 }
 
 .reviews-title {
-  font-family: "Source Serif 4", Georgia, serif;
+  font-family: "Manrope", Georgia, serif;
   font-size: 1.75rem;
   font-weight: 600;
   color: var(--color-black);
@@ -1376,7 +1526,7 @@
 .login-prompt-reviews {
   text-align: center;
   padding: 2rem;
-  background: #f9f9f9;
+  background: var(--color-bg-sand);
   border-radius: 12px;
   margin-bottom: 2rem;
 }
@@ -1388,7 +1538,7 @@
 }
 
 .login-prompt-reviews a {
-  color: #123ac0;
+  color: var(--color-primary);
   text-decoration: none;
   font-weight: 600;
 }

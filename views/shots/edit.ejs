@@ -15,14 +15,20 @@
         <h1 class="auth-title">Edit Shot</h1>
         <p class="auth-description">Update your creative work</p>
       </div>
-      <% if (shot.image) { %>
+      <% const allImages = (shot.images && shot.images.length > 0) ? shot.images : (shot.image ? [shot.image] : []); %>
+      <% if (allImages.length > 0) { %>
       <div class="current-image-preview">
-        <img
-          src="<%= shot.image %>"
-          class="preview-image"
-          alt="Current shot image"
-        />
-        <p class="preview-label">Current Image</p>
+        <p class="preview-label">Current Images (<%= allImages.length %>)</p>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px;">
+          <% allImages.forEach(function(img, idx) { %>
+            <img
+              src="<%= img %>"
+              class="preview-image"
+              alt="Shot image <%= idx + 1 %>"
+              style="width: 120px; height: 90px; object-fit: cover; border-radius: 8px; border: 1px solid var(--color-gray-border);"
+            />
+          <% }) %>
+        </div>
       </div>
       <% } %>
 
@@ -52,19 +58,20 @@
         </div>
 
         <div class="form-group">
-          <label for="image" class="form-label">Update Image</label>
+          <label for="image" class="form-label">Update Images</label>
           <input
             type="file"
             class="form-input form-control"
             id="image"
-            name="shot[image]"
+            name="shot[images]"
             accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+            multiple
           />
           <small class="form-helper-text"
-            >Leave empty to keep current image</small
+            >Leave empty to keep current images. Uploading new images will replace all existing ones.</small
           >
           <div class="invalid-feedback">
-            Please select a valid image file (JPEG, PNG, GIF, or WebP).
+            Please select valid image files (JPEG, PNG, GIF, or WebP).
           </div>
         </div>
 
@@ -75,13 +82,13 @@
             id="description"
             name="shot[description]"
             rows="4"
+            minlength="10"
+            maxlength="5000"
             placeholder="Describe your project..."
-            maxlength="1000"
-          >
-<%= shot.description || '' %></textarea
-          >
+            required
+          ><%= shot.description || '' %></textarea>
           <div class="invalid-feedback">
-            Description cannot exceed 1000 characters.
+            Description is required and should be between 10 and 5000 characters.
           </div>
         </div>
 

@@ -5,6 +5,7 @@ const passport = require("passport");
 const { userSchema } = require("../model.js");
 const { isLoggedIn, isNotLoggedIn } = require("../middleware.js");
 const userController = require("../controllers/user.js");
+const User = require("../models/user.js");
 
 const validateUserSchema = (req, res, next) => {
   const { error } = userSchema.validate(req.body.user);
@@ -36,15 +37,21 @@ router.get("/resend-otp", isNotLoggedIn, userController.resendOTP);
 
 router.post("/reset-password", userController.resetPassword);
 
-router.post(
-  "/login",
+router.post("/login", async (req, res, next) => {
+  if (req.body.username?.includes("@")) {
+    const user = await User.findOne({ email: req.body.username.toLowerCase() });
+    if (!user) {
+      req.flash("failure", "No account found with that email.");
+      return res.redirect("/user/login");
+    }
+    req.body.username = user.username;
+  }
+
   passport.authenticate("local", {
     failureFlash: { type: "failure", message: "Invalid username or password." },
     failureRedirect: "/user/login",
-  }),
-  userController.login
-);
-
+  })(req, res, next);
+}, userController.login);
 router.get("/edit", isLoggedIn, userController.editShow);
 
 router.put("/", isLoggedIn, userController.edit);

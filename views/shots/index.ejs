@@ -2,7 +2,7 @@
 
 <section class="hero-section">
   <div class="hero-content">
-    <h1 class="hero-title">Discover the world's top </br> [ Developers ]</h1>
+    <h1 class="hero-title">Discover the world's top </br> { Developers }</h1>
   </div>
 </section>
 
@@ -16,11 +16,11 @@
 <section class="search-section">
   <div class="search-container">
     <div class="search-input-wrapper">
-      <input class="search-input" type="text" placeholder="What are you looking for?" />
+      <input class="search-input" type="text" placeholder="Search for inspiration..." />
     </div>
     <div class="search-button-wrapper">
       <button class="search-button">
-        <img class="search-icon" src="/images/search.png" alt="" />
+        Search
       </button>
     </div>
   </div>
@@ -29,6 +29,7 @@
 <section class="trending-section">
   <p class="trending-label">Trending Tags : </p>
   <div class="trending-tags">
+    <span class="trending-tag grey" type="button">All</span>
     <span class="trending-tag" type="button">UI/UX</span>
     <span class="trending-tag" type="button">Minimalist Design</span>
     <span class="trending-tag" type="button">Dark Mode</span>
@@ -40,35 +41,38 @@
 <section class="gallery-section">
   <div class="gallery-grid">
     <% shotData.forEach(function(shot) { %>
-      <div class="gallery-item">
+      <div class="gallery-item" onclick="if (!event.target.closest('.stat-badge')) window.location.href='/shot/<%= shot.id %>'">
         <div class="gallery-image-wrapper">
-          <a href="/shot/<%= shot.id %>">
-            <img class="gallery-image" src="<%= shot.image %>" alt="<%= shot.title %>" />
-          </a>
+          <img class="gallery-image" src="<%= (shot.images && shot.images.length > 0) ? shot.images[0] : shot.image %>" alt="<%= shot.title %>" />
+          <div class="shot-actions-overlay">
+            <% if (currUser) { %>
+              <% const isLiked = userLikes.includes(shot._id.toString()); %>
+              <div class="stat-badge thumbs-badge <%= isLiked ? 'liked' : '' %>" onclick="event.stopPropagation(); toggleLikeHome('<%= shot._id %>', this)">
+                <i class="<%= isLiked ? 'fa-solid' : 'fa-regular' %> fa-thumbs-up stat-icon-thumbs"></i>
+                <span class="stat-number"><%= shot.likes || 0 %></span>
+              </div>
+            <% } else { %>
+              <div class="stat-badge thumbs-badge" onclick="event.stopPropagation(); showLoginMessage()">
+                <i class="fa-regular fa-thumbs-up"></i>
+                <span class="stat-number"><%= shot.likes || 0 %></span>
+              </div>
+            <% } %>
+          </div>
         </div>
         <div class="gallery-content">
           <div class="gallery-header">
             <div class="shot-info">
-              <h3 class="shot-title"><%= shot.title %></h3>
-              
-            </div>
-            <div class="shot-actions">
-              <div class="stat-badge views-badge">
-                <i class="fa-solid fa-eye stat-icon-views"></i>
-                <span class="stat-number"><%= shot.views || 0 %></span>
+              <div class="title-row">
+                <h3 class="shot-title"><%= shot.title %></h3>
+                <div class="external-link-badge">
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </div>
               </div>
-              <% if (currUser) { %>
-                <% const isLiked = userLikes.includes(shot._id.toString()); %>
-                <div class="stat-badge thumbs-badge <%= isLiked ? 'liked' : '' %>" onclick="toggleLikeHome('<%= shot._id %>', this)">
-                  <i class="<%= isLiked ? 'fa-solid' : 'fa-regular' %> fa-thumbs-up stat-icon-thumbs" <% if (isLiked) { %> style="color: #123ac0;" <% } %>></i>
-                  <span class="stat-number"><%= shot.likes || 0 %></span>
-                </div>
-              <% } else { %>
-                <div class="stat-badge thumbs-badge" onclick="showLoginMessage()">
-                  <i class="fa-regular fa-thumbs-up stat-icon-thumbs"></i>
-                  <span class="stat-number"><%= shot.likes || 0 %></span>
-                </div>
-              <% } %>
+              <div class="metadata-row">
+                <span class="category"><%= shot.tags && shot.tags.length > 0 ? shot.tags[0] : 'Design' %></span>
+                <span class="separator">•</span>
+                <span class="reading-time"><%= shot.views || 0 %> views</span>
+              </div>
             </div>
           </div>
         </div>
@@ -127,6 +131,13 @@
       // Otherwise, apply the filter
       clickedTag.classList.add('grey');
       let keyword = clickedTag.innerText;
+
+      if (keyword === 'All') {
+        renderNewContent(jsShotData);
+        if (searchInput) searchInput.value = ''; // Also clear search input
+        return;
+      }
+
       let filtered = jsShotData.filter(shot => 
         Array.isArray(shot.tags) && shot.tags.includes(keyword)
       );
@@ -142,36 +153,35 @@
     gallery.innerHTML = filtered.map(shot => {
         const isLiked = currUser && userLikes.includes(shot._id?.toString());
         return `
-          <div class="gallery-item">
+          <div class="gallery-item" onclick="if (!event.target.closest('.stat-badge')) window.location.href='/shot/${shot.id}'">
             <div class="gallery-image-wrapper">
-              <a href="/shot/${shot.id}">
-                <img class="gallery-image" src="${shot.image}" alt="${shot.title}" />
-              </a>
+              <img class="gallery-image" src="${(shot.images && shot.images.length > 0) ? shot.images[0] : shot.image}" alt="${shot.title}" />
+              <div class="shot-actions-overlay">
+                ${currUser ? `
+                  <div class="stat-badge thumbs-badge ${isLiked ? 'liked' : ''}" onclick="event.stopPropagation(); toggleLikeHome('${shot._id}', this)">
+                    <i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-thumbs-up stat-icon-thumbs"></i>
+                    <span class="stat-number">${shot.likes || 0}</span>
+                  </div>` : `
+                  <div class="stat-badge thumbs-badge" onclick="event.stopPropagation(); showLoginMessage()">
+                    <i class="fa-regular fa-thumbs-up stat-icon-thumbs"></i>
+                    <span class="stat-number">${shot.likes || 0}</span>
+                  </div>`}
+              </div>
             </div>
             <div class="gallery-content">
               <div class="gallery-header">
                 <div class="shot-info">
-                  <h3 class="shot-title">${shot.title}</h3>
-                  ${shot.author ? `
-                    <div class="shot-author">
-                      <span class="author-avatar">${shot.author.username.charAt(0).toUpperCase()}</span>
-                      <span class="author-name"><a class="author-name" href="/user/${shot.author.id}">${shot.author.username}</a></span>
-                    </div>` : ''}
-                </div>
-                <div class="shot-actions">
-                  <div class="stat-badge views-badge">
-                    <i class="fa-solid fa-eye stat-icon-views"></i>
-                    <span class="stat-number">${shot.views || 0}</span>
+                  <div class="title-row">
+                    <h3 class="shot-title">${shot.title}</h3>
+                    <div class="external-link-badge">
+                      <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </div>
                   </div>
-                  ${currUser ? `
-                    <div class="stat-badge thumbs-badge ${isLiked ? 'liked' : ''}" onclick="toggleLikeHome('${shot._id}', this)">
-                      <i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-thumbs-up stat-icon-thumbs" ${isLiked ? 'style="color: #123ac0;"' : ''}></i>
-                      <span class="stat-number">${shot.likes || 0}</span>
-                    </div>` : `
-                    <div class="stat-badge thumbs-badge" onclick="showLoginMessage()">
-                      <i class="fa-regular fa-thumbs-up stat-icon-thumbs"></i>
-                      <span class="stat-number">${shot.likes || 0}</span>
-                    </div>`}
+                  <div class="metadata-row">
+                    <span class="category">${shot.tags && shot.tags.length > 0 ? shot.tags[0] : 'Design'}</span>
+                    <span class="separator">•</span>
+                    <span class="reading-time">${shot.views || 0} views</span>
+                  </div>
                 </div>
               </div>
             </div>

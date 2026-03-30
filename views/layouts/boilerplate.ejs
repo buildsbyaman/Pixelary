@@ -88,16 +88,34 @@
           }
         };
 
-        const forms = document.querySelectorAll(".needs-validation");
+        const forms = document.querySelectorAll("form");
         Array.from(forms).forEach((form) => {
           form.addEventListener(
             "submit",
             (event) => {
-              if (!form.checkValidity()) {
-                event.preventDefault();
-                event.stopPropagation();
+              if (form.classList.contains("needs-validation")) {
+                if (!form.checkValidity()) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  form.classList.add("was-validated");
+                  return;
+                }
+                form.classList.add("was-validated");
               }
-              form.classList.add("was-validated");
+
+              // Double check if submission was cancelled by confirm() or other listeners
+              setTimeout(() => {
+                if (!event.defaultPrevented) {
+                  const submitBtn = form.querySelector('button[type="submit"]');
+                  if (submitBtn && !submitBtn.classList.contains("no-loader")) {
+                    const originalHtml = submitBtn.innerHTML;
+                    if (!originalHtml.includes("spinner")) {
+                      submitBtn.classList.add("btn-loading");
+                      submitBtn.innerHTML = `<span class="spinner"></span>${originalHtml}`;
+                    }
+                  }
+                }
+              }, 0);
             },
             false
           );

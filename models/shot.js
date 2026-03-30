@@ -11,7 +11,10 @@ const shotSchema = new mongoose.Schema(
     },
     image: {
       type: String,
-      required: true,
+    },
+    images: {
+      type: [String],
+      default: [],
     },
     views: {
       type: Number,
@@ -39,6 +42,14 @@ const shotSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+// Virtual getter: returns first image for backward compatibility (thumbnails etc.)
+shotSchema.virtual("thumbnail").get(function () {
+  if (this.images && this.images.length > 0) {
+    return this.images[0];
+  }
+  return this.image || "";
+});
 
 const Shot = mongoose.model("Shot", shotSchema);
 

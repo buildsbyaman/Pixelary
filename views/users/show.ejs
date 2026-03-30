@@ -11,8 +11,9 @@
         </div>
       </div>
 
-      <div class="user-info">
+      <div class="profile-user-info">
         <h1 class="user-username">@<%= profileOwner.username %></h1>
+        <p class="user-meta-sub">Member since <%= new Date(profileOwner.createdAt).toLocaleDateString(undefined, { month: 'long', year: 'numeric' }) %></p>
       </div>
 
       <% if (currUser && profileOwner._id == currUser.id) { %>
@@ -83,7 +84,7 @@
             <div class="shot-image-wrapper">
               <img
                 class="shot-image"
-                src="<%= shot.image %>"
+                src="<%= (shot.images && shot.images.length > 0) ? shot.images[0] : shot.image %>"
                 alt="<%= shot.title %>"
               />
             </div>
@@ -147,7 +148,7 @@
             <div class="shot-image-wrapper">
               <img
                 class="shot-image"
-                src="<%= shot.image %>"
+                src="<%= (shot.images && shot.images.length > 0) ? shot.images[0] : shot.image %>"
                 alt="<%= shot.title %>"
               />
             </div>

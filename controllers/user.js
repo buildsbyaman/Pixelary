@@ -320,6 +320,7 @@ module.exports.signup = async (req, res) => {
       if (oldUserExixts.isVerified == true) {
         req.flash("failure", "User already exists!");
         res.redirect("/user/signup");
+        return;
       } else {
         await User.deleteOne({
           $or: [{ email: trimmedEmail }, { username: trimmedUsername }],

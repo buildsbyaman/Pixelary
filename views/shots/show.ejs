@@ -12,8 +12,39 @@
     </div>
 
     <div class="shot-showcase">
+      <% const allImages = (shot.images && shot.images.length > 0) ? shot.images : (shot.image ? [shot.image] : []); %>
       <div class="shot-image-container">
-        <img src="<%= shot.image %>" alt="<%= shot.title %>" class="showcase-image" />
+        <% if (allImages.length > 1) { %>
+        <div class="shot-gallery" id="shotGallery">
+          <div class="gallery-track" id="galleryTrack">
+            <% allImages.forEach(function(img, idx) { %>
+              <div class="gallery-slide">
+                <img src="<%= img %>" alt="<%= shot.title %> - Image <%= idx + 1 %>" class="showcase-image" />
+              </div>
+            <% }) %>
+          </div>
+          <button class="gallery-nav gallery-prev" onclick="changeSlide(-1)" aria-label="Previous image">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="20" height="20">
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </button>
+          <button class="gallery-nav gallery-next" onclick="changeSlide(1)" aria-label="Next image">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="20" height="20">
+              <path d="M9 18l6-6-6-6" />
+            </svg>
+          </button>
+          <div class="gallery-dots" id="galleryDots">
+            <% allImages.forEach(function(img, idx) { %>
+              <button class="gallery-dot <%= idx === 0 ? 'active' : '' %>" onclick="goToSlide(<%= idx %>)" aria-label="Go to image <%= idx + 1 %>"></button>
+            <% }) %>
+          </div>
+          <div class="gallery-counter">
+            <span id="currentSlide">1</span> / <%= allImages.length %>
+          </div>
+        </div>
+        <% } else { %>
+          <img src="<%= allImages[0] %>" alt="<%= shot.title %>" class="showcase-image" />
+        <% } %>
       </div>
 
       <div class="shot-info-section">
@@ -22,7 +53,7 @@
             <h1 class="showcase-title"><%= shot.title %></h1>
 
             <div class="stat-badge-header">
-              <div class="stat-badge views-badge">
+              <div class="views-display">
                 <i class="fa-solid fa-eye stat-icon-views"></i>
                 <span class="stat-number"><%= shot.views || 0 %></span>
               </div>
@@ -47,10 +78,14 @@
 
           <h1 class="author-name-mini">
             Shot By :
-            <a href="/user/<%= shot.author.id %>"><%= shot.author.username %></a>
+            <% if (shot.author) { %>
+              <a href="/user/<%= shot.author.id %>"><%= shot.author.username %></a>
+            <% } else { %>
+              <span class="deleted-user">Deleted User</span>
+            <% } %>
           </h1>
 
-          <% if (currUser && currUser.id == shot.author.id) { %>
+          <% if (currUser && shot.author && currUser.id == shot.author.id) { %>
           <div class="action-buttons">
             <a href="/shot/<%= shot._id %>/edit" class="action-btn edit-btn">
               <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -136,7 +171,7 @@
               <div class="reviewer-info">
                 <div class="user-avatar"><i class="fa-solid fa-user"></i></div>
                 <div class="reviewer-details">
-                  <h4 class="reviewer-name"><%= review.owner.username %></h4>
+                  <h4 class="reviewer-name"><%= (review.owner && review.owner.username) ? review.owner.username : 'Deleted User' %></h4>
                 </div>
               </div>
               <div class="review-actions">
@@ -148,7 +183,7 @@
                     <i class="fa-regular fa-star"></i>
                   <% } %>
                 </div>
-                <% if (currUser && (currUser.id == review.owner._id.toString() || currUser.id == shot.author.id.toString())) { %>
+                  <% if (currUser && ((review.owner && currUser.id == review.owner._id.toString()) || (shot.author && currUser.id == shot.author.id.toString()))) { %>
                   <form class="delete-review-form" action="/review/<%= shot._id %>/<%= review._id %>?_method=DELETE" method="POST">
                     <button type="submit" class="review-delete-btn" title="Delete Review" onclick="return confirm('Are you sure you want to delete this review?')">
                       <i class="fa-solid fa-trash"></i>
@@ -222,5 +257,38 @@ starIcons.forEach((star, index) => {
   star.addEventListener("mouseleave", function () {
     starIcons.forEach(s => (s.style.transform = "scale(1)"));
   });
+});
+
+// Image Gallery Carousel
+let currentSlideIndex = 0;
+const track = document.getElementById("galleryTrack");
+const dots = document.querySelectorAll(".gallery-dot");
+const counterEl = document.getElementById("currentSlide");
+const totalSlides = dots.length;
+
+function updateGallery() {
+  if (!track) return;
+  track.style.transform = `translateX(-${currentSlideIndex * 100}%)`;
+  dots.forEach((dot, i) => {
+    dot.classList.toggle("active", i === currentSlideIndex);
+  });
+  if (counterEl) counterEl.textContent = currentSlideIndex + 1;
+}
+
+window.changeSlide = function (direction) {
+  currentSlideIndex = (currentSlideIndex + direction + totalSlides) % totalSlides;
+  updateGallery();
+};
+
+window.goToSlide = function (index) {
+  currentSlideIndex = index;
+  updateGallery();
+};
+
+// Keyboard arrow navigation
+document.addEventListener("keydown", function (e) {
+  if (!track) return;
+  if (e.key === "ArrowLeft") changeSlide(-1);
+  if (e.key === "ArrowRight") changeSlide(1);
 });
 </script>

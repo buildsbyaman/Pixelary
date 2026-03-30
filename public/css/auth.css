@@ -1,5 +1,6 @@
 .auth-page {
-  min-width: 50rem;
+  min-width: 0;
+  width: 100%;
 }
 
 .auth-container {
@@ -32,17 +33,24 @@
 }
 
 .auth-title {
-  font-family: "Source Serif 4", Georgia, serif;
+  font-family: "Manrope", Georgia, serif;
   font-size: 2rem;
   font-weight: 600;
   color: var(--color-black);
 }
 
 .auth-subtitle {
-  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Manrope", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 1rem;
   color: var(--color-text-gray);
   margin: 0;
+}
+
+.auth-description {
+  font-family: "Manrope", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 0.9rem;
+  color: var(--color-text-gray);
+  margin-top: 0.25rem;
 }
 
 .auth-form {
@@ -51,16 +59,20 @@
 }
 
 .auth-form .btn-group-vertical {
-  gap: 1rem;
-  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-top: 2rem;
 }
 
 .auth-form .btn-group-vertical .btn {
-  height: 3rem;
+  height: 3.5rem;
+  border-radius: 12px !important;
+  margin-bottom: 0px;
 }
 
 .error-message {
-  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Manrope", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 0.75rem;
   color: var(--color-error);
   margin-top: 0.25rem;
@@ -68,7 +80,7 @@
 
 .auth-submit {
   all: unset;
-  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Manrope", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 1rem;
   font-weight: 600;
   padding: 1rem;
@@ -115,7 +127,7 @@
 }
 
 .divider-text {
-  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Manrope", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 0.875rem;
   color: var(--color-text-gray);
   margin: 0 1rem;
@@ -129,7 +141,7 @@
 
 .social-btn {
   all: unset;
-  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Manrope", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 1rem;
   font-weight: 600;
   padding: 0.875rem 1rem;
@@ -162,7 +174,7 @@
 }
 
 .auth-link {
-  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Manrope", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 0.875rem;
   color: var(--color-primary);
 }
@@ -193,7 +205,7 @@
 }
 
 .or-text {
-  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Manrope", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 0.875rem;
   color: var(--color-text-gray);
   padding: 0 1rem;
@@ -205,44 +217,6 @@
   width: 18px;
   height: 18px;
   margin-right: 0.5rem;
-}
-
-@media (max-width: 480px) {
-  .auth-card {
-    padding: 1.5rem 1rem;
-    margin: 0.5rem;
-    max-width: none;
-  }
-
-  .auth-title {
-    font-size: 1.5rem;
-  }
-
-  .auth-description {
-    font-size: 0.75rem;
-  }
-
-  .btn-group-vertical {
-    gap: 0.5rem;
-  }
-
-  .btn {
-    height: 2.75rem;
-    font-size: 13px;
-  }
-}
-
-@media (min-width: 481px) and (max-width: 768px) {
-  .auth-card {
-    padding: 2.5rem;
-  }
-}
-
-@media (min-width: 1400px) {
-  .auth-container {
-    max-width: 1400px;
-    margin: 0 auto;
-  }
 }
 
 .current-image-preview {
@@ -286,7 +260,7 @@
   padding: 0.375rem 0.75rem;
   margin: 0.25rem;
   cursor: pointer;
-  font-family: "Inter", sans-serif;
+  font-family: "Manrope", sans-serif;
   font-size: 12px;
   color: var(--color-text-dark);
   transition: background-color 0.3s ease;
@@ -294,4 +268,62 @@
 
 .form-input[type="file"]::-webkit-file-upload-button:hover {
   background-color: var(--color-gray-border);
+}
+
+/* ===== Mobile-first responsive ===== */
+
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 1.5rem 1.25rem;
+    margin: 0;
+    max-width: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .auth-container {
+    padding: 1rem 0.75rem;
+    align-items: flex-start;
+    padding-top: 1.5rem;
+  }
+
+  .auth-title {
+    font-size: 1.5rem;
+  }
+
+  .auth-description {
+    font-size: 0.8rem;
+  }
+
+  .auth-form .btn-group-vertical {
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+
+  .auth-form .btn-group-vertical .btn {
+    height: 3rem;
+    font-size: 13px;
+  }
+
+  .auth-logo {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .auth-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .auth-title {
+    font-size: 1.75rem;
+  }
+}
+
+@media (min-width: 1400px) {
+  .auth-container {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
 }
